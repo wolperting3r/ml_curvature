@@ -147,3 +147,5 @@ log_*.txt
 # Temp files
 zwischenstand.txt
 output.txt
+# Update
+update.py
