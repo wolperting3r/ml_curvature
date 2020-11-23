@@ -127,3 +127,23 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ---
+
+# Jupyter Notebooks
+*.ipynb
+# Model text files
+model_*
+# Models
+*.h5
+# Figures
+*.png
+# History
+*.csv
+# Logs
+log_*.txt
+# Datasets
+*.feather
+# Temp files
+zwischenstand.txt
+output.txt
