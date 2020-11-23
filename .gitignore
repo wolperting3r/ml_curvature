@@ -149,3 +149,5 @@ zwischenstand.txt
 output.txt
 # Update
 update.py
+# Vim temp files
+.swp

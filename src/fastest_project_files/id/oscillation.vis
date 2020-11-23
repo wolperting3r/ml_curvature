@@ -1,0 +1,124 @@
+#$ver1.0
+
+### particle tracing based methods
+>>> enable particle tracing
+0                      ;{1|y|Y|t|T|0|n|N|f|F}
+
+>>> visualization method
+streakline             ;{streakline|streakribbon}
+0.1                    ;<initial distance> (streakribbons only)
+
+>>> particle tracing algorithm
+c-space fdbd-p         ;{c-space|p-space}{fdbd-p|tetra}
+erk2                   ;{rk1|erk2|hrk2|erk2(1)|hrk2(1)|rk3|rk3(2)|lirk4(3)}
+1                      ;{<steps per simulation time step>|<tolerance>}
+                       ;steps is for non-adaptive integration schemes,
+                       ;tolerance for adaptive integration schemes
+
+>>> particle creation
+0 1 100                ;<start> <step> <max>
+
+>>> start positions
+p-space/local          ;{c-space|p-space/local|p-space}
+
+type parallelogram
+0.06 0.02 0.18
+0.48 0. 0.
+0. 0.16 0.
+36 36
+
+type line
+0.03 0.02 0.18
+0.24 0. 0.
+18
+
+>>> particles at periodic boundaries
+remove                 ;{trace|remove}
+
+>>> variables output
+0                      ;{1|y|Y|t|T|0|n|N|f|F}
+
+### isosurface extraction
+>>> enable isosurface extraction
+0                      ;{1|y|Y|t|T|0|n|N|f|F}
+
+>>> isosurface variable
+k                      ;{u|v|w|vel|vort|p|k|eps|T}
+0.48                   ;<isovalue>
+
+>>> variables output
+0                      ;{1|y|Y|t|T|0|n|N|f|F}
+
+>>> output format
+tecplot                ;{tecplot|explorer}
+
+### surface grid data output
+bc                     ;[bc][con]
+
+### results output
+0 1                    ;<start> <step>
+
+### time-independent visualization
+0 0                    ;<type> <observer system type>
+0.                     ;<angular velocity> (only for observer system type = 2)
+                       ;type = 0 -> time-independent visualization off
+
+
+;General file format notes:
+;==========================
+;
+; * The file is divided into sections (beginning with '### ') and
+;   subsections (beginning with '>>> '). Before each section or subsection
+;   there can be an arbitrary number of empty lines or lines containing
+;   comments. After a subsection header the subsection data is expected 
+;   in the respective order, empty lines and pure comment lines are 
+;   usually not allowed. The same is true for the lines after section
+;   headers if the section has no subsections.
+;
+; * All characters in a line which are behind a ';' are treated as a comment.
+;
+; * The general syntax for the specification of particle start positions
+;   is as follows. Empty lines and pure comment lines are allowed except
+;   in and before <parameters>.
+;
+;   - For c-space start positions:
+;
+;     processor <processor number>
+;     block <parallel block number>
+;     type {list|line|parallelogram|parallel-epiped}
+;     <parameters>
+;
+;   - For p-space/local and p-space start positions:
+;
+;     type {list|line|parallelogram|parallel-epiped}
+;     <parameters>
+;
+;   For the different types the parameter syntax is as follows:
+;
+;   - for type list:
+;
+;     <x> <y> <z>
+;          .
+;          .
+;          .
+;
+;   - for type line:
+;
+;     <x> <y> <z>                (Start position of line)
+;     <dx> <dy> <dz>             (Directional vector spanning the line)
+;     <npos>                     (Number of positions along the line)
+;
+;   - for type parallelogram:
+;
+;     <x> <y> <z>
+;     <dx1> <dy1> <dz1>
+;     <dx2> <dy2> <dz2>
+;     <npos1> <npos2>
+;
+;   - for type parallel-epiped:
+;
+;     <x> <y> <z>
+;     <dx1> <dy1> <dz1>
+;     <dx2> <dy2> <dz2>
+;     <dx3> <dy3> <dz3>
+;     <npos1> <npos2> <npos3>

@@ -1,0 +1,176 @@
+#$ver02.01
+### title
+oscillation
+### read restart
+0
+### write output
+5 0 10 0           ;restart ascii visual grid  (0 = no output)
+### file formats for visual output
+tecio                   ;[cgns][tecio13][tecplot6]
+### tecio options
+t
+0
+### write additional output
+0 0 0 0 0 0             ;louts lsurf ldebug lboundc llagr lvogd
+### visual output variables
+vel pres conc curv den vis ;[vel][pres][tke][edis][zf][temp]
+                        ;[den][vis][vism][hcap][hcon][hconm]
+                        ;[vort][avg][tau][yplus][dist][dlmin]
+                        ;[ldes][sigmahyb][conc][curv][acoustics]
+### ascii output variables 
+                        ;[velx][vely][velz][pres][tke][edis][temp]
+                        ;[den][vis][vism][hcap][hcon][hconm]
+                        ;[flux1][flux2][flux3]
+### ascii output geometry
+                        ;[x][y][z][xc][yc][zc][vol]
+                        ;[fx][fy][fz][ar(1-3)(x-z)]
+### ascii output of surface data
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+### lcalc
+vel time conc  ;[vel][turb|visles][temp][time][dlmin][conc][acoustics]
+                       ;turb:   use a RANS turbulence model
+                       ;visles: perform a Large Eddy Simulation
+### turbulence model
+keps74                  ;according to the above choice of [turb|visles]
+                        ;[keps74|kl93|rng92] high-Re k-epsilon models
+                        ;[chien82] low-Re k-epsilon models
+                        ;[kzf04] elliptic relaxation models
+                        ;[smag|germ] SGS eddy viscosity models
+### parameters for large eddy simulation
+2                 ;[1|2|3|4]  filterwidth criterion [vol|area|max|IDDES]
+7                 ;[7|27] number of adjacent cells used for test filtering
+0.5               ;underrelaxation for germano parameter
+none              ;[none|des97|ddes|iddes] DES mode
+### grid levels
+1 1                     ;no. of coarse / fine grid
+### grid level for tecplot output
+1
+### gravity
+0.d0  0.d0  0.d0
+### geometric scale
+0.075 0.075 0.075
+### check for negativ volumes
+t
+### small
+1.e-30
+### convergence criterion
+1                ;1 --> sum of all residuals, 2 --> max. residual
+### residuum limits
+1.e-4  1.e+10
+### interpolation method
+cds                           ;[cds|tbi]
+### hybrid blending
+0                             ;[0|1]
+### flux blending
+1.  1.  1.  1.  0.  0.  0.  0.  0.  0.  0.  0.   ;1. Grid vel k eps temp zeta f fdlmin
+0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.9 0.8 0.7 0.6 0.5  ;2. Grid
+0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.9 0.8 0.7 0.6 0.5  ;3. Grid
+### high-resolution convection scheme
+5 0 0 0 0 0            ;vel k eps temp zeta
+2                    ;0-constant flux blending,1-GAMMA,2-CUBISTA,
+	             ;3-AVLSMART,4-HOAB,5-MUSCL(Xue)
+                     ;MUSCL type: 0-CDS,1-CUI,2-QUICK,3-LUDS
+### underrelaxation
+0.7 0.7 0.7 0.4 0.9 0.9 0.5 0.3 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.3 0.9 0.9 0.5 0.5 0.5  ;1. Grid u v w p k eps vis den t zeta f fdlmin
+0.5 0.5 0.5 0.3 0.9 0.9 0.5 0.3 0.9 0.5 0.5 0.5 0.5 0.5 0.3 0.9 0.9 0.5 0.3 0.9 0.5 0.5 0.5  ;2. Grid
+0.5 0.5 0.5 0.3 0.9 0.9 0.5 0.3 0.9 0.5 0.5 0.5 0.5 0.5 0.3 0.9 0.9 0.5 0.3 0.9 0.5 0.5 0.5  ;3. Grid
+### sipsol
+0.93                                        ;alfa
+5 5 0 25 1 1 1 1 1 1 1 5                     ;nsw: u v w p k eps t zeta f fdlmin c
+### multigrid cycle definition
+100                        ; lsg(1) (see wiki > Multigrid Variables for more details)
+20 10 1                    ; lsg(2),lsr(1,2),lsi(2,2)
+10 15 30 10 5             ; lsg(3),lsr(2,3),lsr(1,3),lsi(1,3),lsi(2,3),lsi(3,3)
+### number of multigrid cycles
+1 0 0               ; mit(1),mit(2),mit(3)
+### time discretization
+fofi                    ;discretization method [fofi|sofi|crni]
+4800 0.000625        ;no of timesteps,size of timestep # 16000 = 10 s, 4800 = 3 s
+0.1
+### acoustics
+0.3                     ;accfl_ref
+1                       ;acgrd - grid level for acoustics calculation
+1                       ;aclimi - flux limiter: 1 Upwind, 2 MC, 3 Superbee, 4 Charm, 5 Van Leer, 6 Van Alba1, 7 Van Alba2, 8 Osher, 9 Lax-Wendroff, 10 Koren
+1.5d0                   ;aclimp - Parameter for Osher-Limiter, TVD for 1<aclimp<2
+f                       ;laccoupling - Couple external acoustics solver
+1                       ;nAcousticsPatches
+1 1 10 1 10 1 10        ;acousticsPatch(:,1)
+### heat production by dissipation
+n
+### bouyancy by temperature gradient
+none                    ;[none|boussinesq|dengrad]
+### fluid regions       
+t                       ;for each flow region: t - fluid, f - solid
+### moving grids
+n                       ;lmvgr
+### fluid structure interaction
+n  n  n  n              ;lfsi  lfsiread  lfsiwrite lfsisend
+-1                      ;extrapolation of forces: [0|1|2|3]-order, [-1] = none
+15                      ;max. number of outer iterations
+1                       ;coupling interface (0=none, 1=preCICE, 2=MpCCI)
+1                       ;interpolation scheme (0=NNB, 1=CONS)
+2                       ;[1|2] underrelaxation: constant|Aitken
+2                       ;[2] residual norm: maximum|L2
+0.05  0.0               ;underrel. parameter for structural distortions, aitken damping factor
+5.e-8 5.e-8 5.e-8       ;fsi-residuum limit (x,y,z-direction)
+5.e-8                   ;L2 limit
+-1                      ;extrpolation of displacements: [1|2|3]-order, [-1] = none
+1.e-5                   ;convergence criterion for the TFSI
+1.0                     ;underrelaxation parameter for the TFSI
+### grid distortions
+n                       ;Grid Smoother [y/n]
+1 1.0                   ;number of block to be distorted; dist_norm
+n                       ;use detailed grid distortion input matrix [y/n]
+1 1  0 0 0 0 0 0  2  0.0 ;simple version [n]
+;1 1 1  0 0 0 0 0 0  0 0 0 0 0 0   0 0 0 0  0 0 0 0  0 0 0 0  0.0 ;detailed version [y]
+### high mem fast calculation
+0                       ;switch for fast calculation with higher mem usage
+### mpcci input data
+1                       ;mycode
+2                       ;remoteCodeId
+10                      ;meshId                  from *.cci file
+4                       ;nQuantityIds
+11                      ;QuantityIds(1),localMeshIds(1)
+12                      ;QuantityIds(2),localMeshIds(2)
+13                      ;QuantityIds(3),localMeshIds(3)
+14                      ;QuantityIds(4),localMeshIds(4)
+### time limit
+1.e30  
+### pressure gradient
+0. 0. 0.                ;pressure gradient in x,y,z direction
+### multiphase
+1                       ;number of transported species: mcphi
+4
+13                     ;1-CST(*),2-CST-Hyb(*),3-NoST,4-CDS,5-LRM,6-CST+CDS(borders),7-CVOFLS(*),8-Young,9-Filter+Young,10-HF,11-Fixed,12-HF and CDS
+0.02361d0                 ;surface tension coefficient: dskappa
+4 4                     ;* Number of cells for kernel base: flcell,flcell2
+0
+0.1
+### tasks per process
+1 1 1 1 1 1 1 1 1 1     ;for each process (processor)
+### convective exit boundary condition
+0                       ;switch
+0.7                     ;underrelaxation for boundary condition
+### turbulence statistics
+f                       ;perform time averaging
+f                       ;higher order statistics (skewness,flatness)
+1000 1                  ;averaging starting time (timestep), step (timesteps)
+### draglift
+n                       ;draglift calculation on/off
+6                       ;number of faces where draglift is to be calc.
+1 2 5 6 9 10            ;blocknumbers of blocks w. draglift faces
+1 1 6 6 1 1   ;corresponding faces (1;6:i=2;nim, 2;5:j=2;njm, 3;4:k=2;nkm)
+1.e-3                   ;reference area for D,L coeff.
+0.5                     ;reference velocity (u_inf) for D,L coeff.
+1.e3                    ;reference density for D,L coeff.
+0                       ;rotation angle in degrees
+0 0 1                   ;vector components nx,ny,nz that define rotation axis (s. wiki for examples)
+;### residuum norming
+;0.02935d0 2570.d0 0.1d0 0.1d0 0.1d0 1710.d0 1.d0 ;area, rho, vel, tui, len, temp, conc
+### pressure reference point
+f 0.0 0.0 0.0 f 0.d0 ;[lcpref][xpref][ypref][zpref][lpfix][fpref]
+; one line per fluid region(fr)
+### static pressure exit boundary condition
+f
+### non blocking mpi
+f

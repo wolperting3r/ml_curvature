@@ -1,0 +1,9 @@
+3               /* dhydr */
+3               /* ifldir(1) */
+0.1    0.1      /* tu (turbulent intensity), dis (reference length) */
+0. 0. 0. 0.     /*u,v,w,p*/
+300.0           /* temp,radiative flux,vofr,cst*/
+305.0	        /* initTempS*/
+0.0             /* single reactive scalar BML Model*/
+1               /* reference convective velocity for hybrid blending*/
+1               /* reference convective length scale for hybrid blending*/
